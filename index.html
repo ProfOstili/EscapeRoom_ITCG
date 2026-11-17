@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Neoxis – Il labirinto del dubbio</title>
+<title>Neoxis Escape Room</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -981,7 +981,7 @@ if(MOBILE||innerWidth<820) $("pad").classList.add("on");
 document.addEventListener("gesturestart",e=>e.preventDefault());
 const fsEl=document.documentElement, canFS=!!(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen);
 const isFS=()=>document.fullscreenElement||document.webkitFullscreenElement;
-function goFS(){ try{ if(isFS()) (document.exitFullscreen||document.webkitExitFullscreen).call(document); else (fsEl.requestFullscreen||fsEl.webkitRequestFullscreen).call(fsEl,{navigationUI:"hide"}); }catch(e){} }
+function goFS(){ try{ if(isFS()) (document.exitFullscreen||document.webkitExitFullscreen).call(document); else { const r=(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen).call(fsEl,{navigationUI:"hide"}); r&&r.catch&&r.catch(()=>{}); } }catch(e){} }
 if(canFS){ $("bFull").hidden=false; $("bFull").onclick=goFS; }
 if(MOBILE && innerHeight>innerWidth) $("rot").style.display="block";
 document.addEventListener("visibilitychange",()=>{ held=null; st.away=document.hidden; if(!document.hidden){ clock.getDelta(); } });
