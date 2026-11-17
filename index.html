@@ -2,7 +2,11 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050916">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Neoxis – Il labirinto del dubbio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,9 +19,10 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#050916}}
 :root[data-theme="dark"]{--bg:#050916}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:"Exo 2",system-ui,sans-serif}
+html,body{margin:0;height:100%;height:100dvh;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%;background:var(--bg);color:var(--ink);font-family:"Exo 2",system-ui,sans-serif}
 #c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
-button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:12px;padding:10px 18px;background:linear-gradient(135deg,var(--cyan),#7a6bff);color:#04102a;letter-spacing:.02em}
+input{-webkit-user-select:text;user-select:text}
+button{touch-action:manipulation;font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:12px;padding:10px 18px;background:linear-gradient(135deg,var(--cyan),#7a6bff);color:#04102a;letter-spacing:.02em}
 button:hover{filter:brightness(1.1)}
 button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 button:disabled{opacity:.45;cursor:default;filter:none}
@@ -105,6 +110,36 @@ button.ghost{background:transparent;color:var(--ink);border:2px solid var(--line
 .swb{width:36px;height:36px;border-radius:50%;padding:0;border:3px solid transparent}
 .swb.sel{border-color:#fff;box-shadow:0 0 12px #fff8}
 #start{font-size:1.15rem;padding:14px 22px;font-family:Orbitron,sans-serif}
+#rot{display:none;color:var(--dim);font-size:.85rem}
+/* Telefono in verticale: tutto più compatto */
+@media (max-width:420px){
+  .code{gap:6px}.code label{width:auto;flex:1;font-size:.62rem}
+  .code input{width:100%!important;max-width:58px;height:56px;font-size:1.4rem!important;padding:4px!important}
+  #box .x{padding:3px 8px}
+}
+/* Telefono in orizzontale: schermo basso */
+@media (max-height:500px) and (orientation:landscape){
+  #hud{padding:calc(4px + env(safe-area-inset-top)) calc(8px + env(safe-area-inset-right)) 4px calc(8px + env(safe-area-inset-left));gap:6px}
+  #hud img{width:30px;height:30px}
+  #hud .pill{font-size:.8rem;padding:4px 8px}
+  #hud button{padding:4px 8px;font-size:.9rem}
+  #gems i{width:16px;height:16px}
+  #pad{grid-template-columns:repeat(3,50px);grid-template-rows:repeat(2,46px);left:calc(10px + env(safe-area-inset-left));bottom:calc(10px + env(safe-area-inset-bottom))}
+  #mm{width:96px;height:96px;top:auto;right:calc(10px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom))}
+  #toast{bottom:calc(10px + env(safe-area-inset-bottom));max-width:min(420px,50vw);font-size:.85rem;padding:8px 12px}
+  #ov{padding:8px}
+  #box{max-height:96dvh;padding:14px 16px 12px;gap:8px;max-width:640px}
+  #box p{font-size:.95rem;line-height:1.45}
+  #box h3{font-size:1.05rem}
+  .opt{padding:8px 12px}
+  .opts:not(.vf){display:grid;grid-template-columns:1fr 1fr}
+  .gem{width:44px;height:44px}
+  .expr{font-size:1.2rem;padding:6px}
+  .dip img{width:56px;height:56px}
+  #intro .card{gap:8px}
+  #intro img{width:80px}
+  #intro .story{font-size:.9rem;padding:10px 12px}
+}
 #intro .keys{color:var(--dim);font-size:.9rem}
 #err{display:none;position:fixed;inset:0;z-index:9;align-items:center;justify-content:center;padding:24px;text-align:center;background:var(--bg);font-size:1.1rem;line-height:1.6}
 
@@ -135,6 +170,7 @@ button.ghost{background:transparent;color:var(--ink);border:2px solid var(--line
   <span class="sp"></span>
   <button id="bCam" aria-label="Cambia inquadratura" title="Cambia inquadratura (C)">🎥</button>
   <button id="bSnd" aria-label="Attiva o disattiva i suoni" title="Suoni">🔊</button>
+  <button id="bFull" aria-label="Schermo intero" title="Schermo intero" hidden>⛶</button>
   <button id="bHelp" aria-label="Aiuto" title="Aiuto">❓</button>
 </div>
 <canvas id="mm" width="230" height="230" aria-label="Mappa del labirinto"></canvas>
@@ -163,6 +199,7 @@ button.ghost{background:transparent;color:var(--ink);border:2px solid var(--line
       <div class="sw" id="sw"><span>Colore felpa:</span></div>
       <button id="start">▶ Entra nel labirinto</button>
     </div>
+    <div id="rot">📱 Consiglio: gira il telefono in orizzontale per vedere più labirinto.</div>
     <div class="keys">Muoviti con le <b>frecce</b> o <b>W A S D</b> · su tablet usa i pulsanti o trascina il dito</div>
   </div>
 </div>
@@ -328,15 +365,18 @@ function tone(f,d,t0=0,type="sine",v=.12){ if(st.mute||!AC) return; try{ const o
 const sBit = () => { tone(1320,.07,0,"square",.05); tone(1760,.1,.06,"square",.05); };
 const sOk = () => [660,880,1320].forEach((f,i)=>tone(f,.16,i*.07,"triangle"));
 const sOpen = () => [392,523,659].forEach((f,i)=>tone(f,.2,i*.08,"triangle"));
-const sGem = () => [523,659,784,1047,1319].forEach((f,i)=>tone(f,.3,i*.09,"triangle",.14));
-const sAlarm = () => { for(let i=0;i<4;i++){ tone(880,.14,i*.22,"sawtooth",.07); tone(587,.14,i*.22+.11,"sawtooth",.07);} };
+const sGem = () => { buzz([40,40,80]); [523,659,784,1047,1319].forEach((f,i)=>tone(f,.3,i*.09,"triangle",.14)); };
+const buzz = p => { try{ if(!st.mute&&navigator.vibrate) navigator.vibrate(p); }catch(e){} };
+const sAlarm = () => { buzz([120,60,120]); for(let i=0;i<4;i++){ tone(880,.14,i*.22,"sawtooth",.07); tone(587,.14,i*.22+.11,"sawtooth",.07);} };
 const sWin = () => [523,659,784,1047,784,1047,1319,1568].forEach((f,i)=>tone(f,.32,i*.12,"triangle",.14));
 const sBump = () => tone(110,.08,0,"square",.04);
 
 /* ---------------- Three.js ---------------- */
 const canvas = $("c");
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true, powerPreference:"high-performance"});
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+const MOBILE = matchMedia("(pointer:coarse)").matches;
+let PR = Math.min(devicePixelRatio, MOBILE?1.25:1.5);
+renderer.setPixelRatio(PR);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050916);
@@ -372,7 +412,7 @@ function labelTex(text, color, opts={}){
   const font = `${opts.weight||800} ${fs}px ${opts.font||"Orbitron, sans-serif"}`;
   g.font=font; const w=Math.ceil(g.measureText(text).width)+pad*2, h=fs+pad*1.6;
   c.width=w; c.height=h; g.font=font; g.textAlign="center"; g.textBaseline="middle";
-  if(opts.bubble){ g.fillStyle="rgba(40,0,20,.72)"; g.strokeStyle=color; g.lineWidth=4; g.beginPath(); g.roundRect(3,3,w-6,h-6,h/2.4); g.fill(); g.stroke(); }
+  if(opts.bubble){ g.fillStyle="rgba(40,0,20,.72)"; g.strokeStyle=color; g.lineWidth=4; g.beginPath(); g.roundRect?g.roundRect(3,3,w-6,h-6,h/2.4):g.rect(3,3,w-6,h-6); g.fill(); g.stroke(); }
   g.shadowColor=color; g.shadowBlur=18; g.fillStyle=opts.fill||color; g.fillText(text,w/2,h/2+2);
   const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return {t, ratio:w/h};
 }
@@ -550,8 +590,8 @@ function buildWorld(){
   });
 
   // particelle
-  const pg=new THREE.BufferGeometry(), pos=new Float32Array(900*3);
-  for(let i=0;i<900;i++){ pos[i*3]=(r()-.5)*(T+10); pos[i*3+1]=r()*7+.3; pos[i*3+2]=(r()-.5)*(T+10); }
+  const pg=new THREE.BufferGeometry(), pos=new Float32Array((MOBILE?400:900)*3);
+  for(let i=0;i<(MOBILE?400:900);i++){ pos[i*3]=(r()-.5)*(T+10); pos[i*3+1]=r()*7+.3; pos[i*3+2]=(r()-.5)*(T+10); }
   pg.setAttribute("position",new THREE.BufferAttribute(pos,3));
   particles=new THREE.Points(pg,new THREE.PointsMaterial({color:0x7fbfff,size:.05,transparent:true,opacity:.7,blending:THREE.AdditiveBlending,depthWrite:false}));
   world.add(particles);
@@ -577,7 +617,7 @@ function refreshFog(){
 }
 
 /* ---------------- Movimento ---------------- */
-const blocked = () => !st.started || st.modal || st.finished || st.help;
+const blocked = () => !st.started || st.modal || st.finished || st.help || st.away;
 function tryMove(dx,dy){
   if(blocked()||hero.t<1) return;
   hero.yawT=Math.atan2(dx,dy);
@@ -657,7 +697,7 @@ function ask(color, q, i, n, timer){
           const miss=good.filter(k=>!sel.has(k)).length; wrong(miss&&[...sel].every(k=>q.risposte[k][1])?`Ne manca ancora ${miss===1?"una":miss}.`:null); }
       };
       if(timer){ let left=timer; const bar=box.querySelector(".tbar i"), tl=box.querySelector(".tl");
-        timerIv=setInterval(()=>{ if(st.help) return; left-=.1; bar.style.transform=`scaleX(${Math.max(0,left/timer)})`; tl.textContent=Math.ceil(Math.max(0,left))+"s";
+        timerIv=setInterval(()=>{ if(st.help||st.away) return; left-=.1; bar.style.transform=`scaleX(${Math.max(0,left/timer)})`; tl.textContent=Math.ceil(Math.max(0,left))+"s";
           if(left<=0) wrong("⏱ Tempo scaduto!"); },100); }
     };
     draw();
@@ -826,7 +866,7 @@ let mmT=0;
 function loop(){
   requestAnimationFrame(loop);
   const dt=Math.min(.05,clock.getDelta()), now=clock.elapsedTime;
-  if(st.started&&!st.finished&&!st.help) st.elapsed+=dt*1000;
+  if(st.started&&!st.finished&&!st.help&&!st.away) st.elapsed+=dt*1000;
 
   // eroe
   if(hero){
@@ -888,7 +928,20 @@ function loop(){
     p.needsUpdate=true; m.material.opacity=Math.max(0,u.life/u.max); if(u.life<=0){ world.remove(m); m.geometry.dispose(); confetti.splice(i,1); } }
 
   if(st.started){ hud(); mmT-=dt; if(mmT<=0){ minimap(); mmT=.12; } }
-  composer.render();
+  if(useBloom) composer.render(); else renderer.render(scene,camera);
+  perf(dt);
+}
+// Se il telefono fatica, la grafica si alleggerisce da sola.
+let useBloom=true, pfT=0, pfN=0, pfStage=0;
+function perf(dt){
+  if(!st.started||pfStage>=2) return;
+  pfT+=dt; pfN++;
+  if(pfT<3) return;
+  const fps=pfN/pfT; pfT=0; pfN=0;
+  if(fps<28){ pfStage++;
+    if(pfStage===1){ useBloom=false; }
+    else { PR=1; renderer.setPixelRatio(1); composer.setPixelRatio(1); resize(); }
+  }
 }
 
 /* ---------------- Comandi ---------------- */
@@ -920,7 +973,15 @@ $("bHelp").onclick=()=>{ if(st.modal) return; st.help=true;
    <p>🔴 Evita i <b>guardiani digitali</b>: se ti scoprono perdi 30 punti. La piazza centrale è una zona sicura.</p>
    <p>🎮 Frecce o W A S D · su tablet pulsanti o trascina il dito · <b>C</b> cambia inquadratura.</p>`,"Torna al gioco",{noX:true})
   .then(()=>{ st.help=false; closeBox(); }); };
-if(matchMedia("(pointer:coarse)").matches||innerWidth<820) $("pad").classList.add("on");
+if(MOBILE||innerWidth<820) $("pad").classList.add("on");
+["contextmenu","selectstart"].forEach(ev=>document.addEventListener(ev,e=>{ if(e.target.tagName!=="INPUT") e.preventDefault(); }));
+document.addEventListener("gesturestart",e=>e.preventDefault());
+const fsEl=document.documentElement, canFS=!!(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen);
+const isFS=()=>document.fullscreenElement||document.webkitFullscreenElement;
+function goFS(){ try{ if(isFS()) (document.exitFullscreen||document.webkitExitFullscreen).call(document); else (fsEl.requestFullscreen||fsEl.webkitRequestFullscreen).call(fsEl,{navigationUI:"hide"}); }catch(e){} }
+if(canFS){ $("bFull").hidden=false; $("bFull").onclick=goFS; }
+if(MOBILE && innerHeight>innerWidth) $("rot").style.display="block";
+document.addEventListener("visibilitychange",()=>{ held=null; st.away=document.hidden; if(!document.hidden){ clock.getDelta(); } });
 
 /* ---------------- Avvio ---------------- */
 const swBox=$("sw");
@@ -937,6 +998,8 @@ function newGame(){
 }
 $("start").onclick=()=>{
   st.name=$("nm").value.trim();
+  if(MOBILE&&canFS&&!isFS()) goFS();
+  $("nm").blur();
   try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); AC.resume&&AC.resume(); }catch(e){}
   $("intro").style.display="none"; $("hud").classList.add("on"); $("mm").classList.add("on");
   st.started=true;
