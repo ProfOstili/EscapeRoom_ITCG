@@ -57,6 +57,7 @@ button.ghost{background:transparent;color:var(--ink);border:2px solid var(--line
 #ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:16px;background:#02051099;z-index:5}
 #ov.show{display:flex}
 #box{position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--c,var(--cyan));border-radius:18px;padding:22px 22px 18px;max-width:560px;width:100%;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:12px;box-shadow:0 0 40px -6px var(--c,var(--cyan));backdrop-filter:blur(10px)}
+#box>*{flex-shrink:0}
 #box h2{margin:0;font-family:Orbitron,sans-serif;font-size:1.35rem;color:var(--c,var(--cyan));letter-spacing:.03em}
 #box h3{margin:0;font-size:1.2rem;line-height:1.35}
 #box p{margin:0;line-height:1.55;font-size:1.05rem}
@@ -116,6 +117,8 @@ button.ghost{background:transparent;color:var(--ink);border:2px solid var(--line
   .code{gap:6px}.code label{width:auto;flex:1;font-size:.62rem}
   .code input{width:100%!important;max-width:58px;height:56px;font-size:1.4rem!important;padding:4px!important}
   #box .x{padding:3px 8px}
+  #hud{gap:5px;padding-left:8px;padding-right:8px}
+  #hud button{padding:5px 8px}
 }
 /* Telefono in orizzontale: schermo basso */
 @media (max-height:500px) and (orientation:landscape){
